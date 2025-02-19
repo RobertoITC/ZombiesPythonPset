@@ -1,14 +1,10 @@
 from abc import ABC, abstractmethod
 
 # --------------------------------------------------------------------
-# 1. CLASE ABSTRACTA ZOMBIE
-#    (con atributos Salud y Velocidad y métodos abstractos)
+# 1. CLASE ABSTRACTA: ZOMBIE
+#    Sin atributos, solo métodos abstractos.
 # --------------------------------------------------------------------
 class Zombie(ABC):
-    def __init__(self, salud, velocidad):
-        self.salud = salud
-        self.velocidad = velocidad
-
     @abstractmethod
     def ataque(self):
         pass
@@ -21,13 +17,15 @@ class Zombie(ABC):
     def caminar(self):
         pass
 
+# --------------------------------------------------------------------
+# 2. SUBCLASES DE ZOMBIE
+#    Cada una agrega sus propios atributos (si los necesita).
+# --------------------------------------------------------------------
+class ZombiePerro(Zombie):
+    def __init__(self, salud, velocidad):
+        self.salud = salud
+        self.velocidad = velocidad
 
-# --------------------------------------------------------------------
-# 2. CLASES HIJAS DE ZOMBIE
-#    Cada uno implementa los métodos abstractos
-#    y define un método nuevo propio.
-# --------------------------------------------------------------------
-class Zombie_perro(Zombie):
     def ataque(self):
         print("Zombie perro muerde con furia.")
 
@@ -37,12 +35,15 @@ class Zombie_perro(Zombie):
     def caminar(self):
         print("Zombie perro se desplaza sobre cuatro patas.")
 
-    # Método nuevo
+    # Método extra
     def correr_en_cuatro_patas(self):
         print("Zombie perro corre rápidamente en cuatro patas.")
 
+class ZombieChilango(Zombie):
+    def __init__(self, salud, velocidad):
+        self.salud = salud
+        self.velocidad = velocidad
 
-class Zombie_chilango(Zombie):
     def ataque(self):
         print("Zombie chilango ataca lanzando garnachas.")
 
@@ -52,12 +53,15 @@ class Zombie_chilango(Zombie):
     def caminar(self):
         print("Zombie chilango camina al ritmo de la cumbia.")
 
-    # Método nuevo
+    # Método extra
     def lanzar_guajolotas(self):
         print("Zombie chilango lanza guajolotas explosivas a sus víctimas.")
 
+class ZombieFit(Zombie):
+    def __init__(self, salud, velocidad):
+        self.salud = salud
+        self.velocidad = velocidad
 
-class Zombie_fit(Zombie):
     def ataque(self):
         print("Zombie fit hace un ataque con mancuernas.")
 
@@ -67,12 +71,15 @@ class Zombie_fit(Zombie):
     def caminar(self):
         print("Zombie fit trota con energía.")
 
-    # Método nuevo
+    # Método extra
     def correr(self):
         print("Zombie fit corre a toda velocidad para entrenar.")
 
+class ZombieGentrificador(Zombie):
+    def __init__(self, salud, velocidad):
+        self.salud = salud
+        self.velocidad = velocidad
 
-class Zombie_gentrificador(Zombie):
     def ataque(self):
         print("Zombie gentrificador incrementa la renta y ataca tu bolsillo.")
 
@@ -82,14 +89,13 @@ class Zombie_gentrificador(Zombie):
     def caminar(self):
         print("Zombie gentrificador camina con aires de superioridad.")
 
-    # Método nuevo
+    # Método extra
     def quejarse_del_ruido(self):
         print("Zombie gentrificador: '¿Podrían bajar el volumen? Estoy tomando mi matcha latte.'")
 
-
 # --------------------------------------------------------------------
-# 3. CLASE ABSTRACTA METRO
-#    (solo métodos abstractos, sin atributos)
+# 3. CLASE ABSTRACTA: METRO
+#    Sin atributos, solo métodos abstractos.
 # --------------------------------------------------------------------
 class Metro(ABC):
     @abstractmethod
@@ -120,11 +126,29 @@ class Metro(ABC):
     def cambiar_via(self):
         pass
 
+    # Métodos que manifiestan la dependencia con Zombie
+    @abstractmethod
+    def agregar_zombie(self, zombie: Zombie):
+        pass
+
+    @abstractmethod
+    def remover_zombie(self, zombie: Zombie):
+        pass
+
+    @abstractmethod
+    def listar_zombies(self):
+        pass
 
 # --------------------------------------------------------------------
-# 4. CLASE CONCRETA: METRO DE LA CDMX
+# 4. CLASE CONCRETA: METRO DE CDMX
+#    Aquí sí agregamos un atributo para almacenar zombies,
+#    mostrando la "composición": si el Metro muere, sus zombies se van con él.
 # --------------------------------------------------------------------
 class MetroDeCdmx(Metro):
+    def __init__(self):
+        # Almacén de Zombies "dentro" del Metro
+        self._zombies = []
+
     def avanzar(self):
         print("El Metro de la CDMX avanza hacia la siguiente estación.")
 
@@ -141,83 +165,44 @@ class MetroDeCdmx(Metro):
         print("El Metro de la CDMX anuncia la siguiente parada.")
 
     def modo_panico(self):
-        print("¡El Metro de la CDMX entra en modo pánico! Todo se vuelve un caos.")
+        print("¡El Metro de la CDMX entra en modo pánico! Los pasajeros entran en caos.")
 
     def cambiar_via(self):
         print("El Metro de la CDMX cambia de vía.")
 
+    def agregar_zombie(self, zombie: Zombie):
+        self._zombies.append(zombie)
+        print(f"{type(zombie).__name__} (Salud={getattr(zombie, 'salud', 'N/A')}) se ha subido al Metro.")
+
+    def remover_zombie(self, zombie: Zombie):
+        if zombie in self._zombies:
+            self._zombies.remove(zombie)
+            print(f"{type(zombie).__name__} se ha bajado del Metro.")
+        else:
+            print("Ese zombie no se encuentra en el Metro.")
+
+    def listar_zombies(self):
+        if not self._zombies:
+            print("No hay zombies en el Metro.")
+        else:
+            print("Zombies dentro del Metro:")
+            for z in self._zombies:
+                print(f" - {type(z).__name__} (Salud={z.salud}, Velocidad={z.velocidad})")
 
 # --------------------------------------------------------------------
-# 5. CLASE ABSTRACTA VAGON
-# --------------------------------------------------------------------
-class Vagon(ABC):
-    @abstractmethod
-    def abrir_puertas(self):
-        pass
-
-    @abstractmethod
-    def cerrar_puertas(self):
-        pass
-
-    @abstractmethod
-    def prender_luces(self):
-        pass
-
-    @abstractmethod
-    def apagar_luces(self):
-        pass
-
-
-# --------------------------------------------------------------------
-# 6. CLASE CONCRETA: VAGON DE PASAJEROS
-# --------------------------------------------------------------------
-class VagonPasajeros(Vagon):
-    def abrir_puertas(self):
-        print("Vagón de pasajeros abre sus puertas.")
-
-    def cerrar_puertas(self):
-        print("Vagón de pasajeros cierra sus puertas.")
-
-    def prender_luces(self):
-        print("Vagón de pasajeros enciende las luces.")
-
-    def apagar_luces(self):
-        print("Vagón de pasajeros apaga las luces.")
-
-
-# --------------------------------------------------------------------
-# 7. MAIN: DEMOSTRACIÓN
+# 5. DEMO
 # --------------------------------------------------------------------
 if __name__ == "__main__":
-    # Crear instancias de cada tipo de Zombie
-    z_perro = Zombie_perro(salud=50, velocidad=10)
-    z_chilango = Zombie_chilango(salud=60, velocidad=8)
-    z_fit = Zombie_fit(salud=80, velocidad=15)
-    z_gentri = Zombie_gentrificador(salud=70, velocidad=5)
-
-    # Probar métodos de cada Zombie
-    print("=== PRUEBAS: ZOMBIES ===")
-    zombies = [z_perro, z_chilango, z_fit, z_gentri]
-    for zombie in zombies:
-        zombie.ataque()
-        zombie.hablar()
-        zombie.caminar()
-
-        # Llamar el método especial de cada Zombie
-        if isinstance(zombie, Zombie_perro):
-            zombie.correr_en_cuatro_patas()
-        elif isinstance(zombie, Zombie_chilango):
-            zombie.lanzar_guajolotas()
-        elif isinstance(zombie, Zombie_fit):
-            zombie.correr()
-        elif isinstance(zombie, Zombie_gentrificador):
-            zombie.quejarse_del_ruido()
-
-        print("-" * 40)
-
-    # Crear y probar un Metro
-    print("=== PRUEBAS: METRO ===")
+    # Crear instancia del Metro
     metro = MetroDeCdmx()
+
+    # Crear algunos Zombies (atributos sólo en la subclase)
+    z_perro = ZombiePerro(salud=50, velocidad=10)
+    z_chilango = ZombieChilango(salud=60, velocidad=8)
+    z_fit = ZombieFit(salud=80, velocidad=15)
+    z_gentri = ZombieGentrificador(salud=70, velocidad=5)
+
+    print("=== PRUEBAS: METRO ===")
     metro.avanzar()
     metro.detenerse()
     metro.abrir_puertas()
@@ -227,11 +212,36 @@ if __name__ == "__main__":
     metro.cambiar_via()
     print("-" * 40)
 
-    # Crear y probar un Vagon
-    print("=== PRUEBAS: VAGON ===")
-    vagon = VagonPasajeros()
-    vagon.abrir_puertas()
-    vagon.cerrar_puertas()
-    vagon.prender_luces()
-    vagon.apagar_luces()
+    print("=== SUBEN ZOMBIES AL METRO ===")
+    metro.agregar_zombie(z_perro)
+    metro.agregar_zombie(z_chilango)
+    metro.agregar_zombie(z_fit)
+    metro.agregar_zombie(z_gentri)
+    print("-" * 40)
+
+    print("=== ZOMBIES A BORDO ===")
+    metro.listar_zombies()
+    print("-" * 40)
+
+    print("=== METODOS DE CADA ZOMBIE ===")
+    for z in [z_perro, z_chilango, z_fit, z_gentri]:
+        z.ataque()
+        z.hablar()
+        z.caminar()
+        if isinstance(z, ZombiePerro):
+            z.correr_en_cuatro_patas()
+        elif isinstance(z, ZombieChilango):
+            z.lanzar_guajolotas()
+        elif isinstance(z, ZombieFit):
+            z.correr()
+        elif isinstance(z, ZombieGentrificador):
+            z.quejarse_del_ruido()
+        print("-" * 40)
+
+    print("=== BAJAN ZOMBIES DEL METRO ===")
+    metro.remover_zombie(z_perro)
+    metro.remover_zombie(z_fit)
+
+    print("=== ZOMBIES RESTANTES ===")
+    metro.listar_zombies()
     print("-" * 40)
