@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 
 # --------------------------------------------------------------------
-# 1. CLASE ABSTRACTA: ZOMBIE
-#    Sin atributos, solo métodos abstractos.
+# CLASE ABSTRACTA: ZOMBIE
 # --------------------------------------------------------------------
 class Zombie(ABC):
     @abstractmethod
@@ -18,8 +17,7 @@ class Zombie(ABC):
         pass
 
 # --------------------------------------------------------------------
-# 2. SUBCLASES DE ZOMBIE
-#    Cada una agrega sus propios atributos (si los necesita).
+# CLASES DE ZOMBIE
 # --------------------------------------------------------------------
 class ZombiePerro(Zombie):
     def __init__(self, salud, velocidad):
@@ -94,8 +92,7 @@ class ZombieGentrificador(Zombie):
         print("Zombie gentrificador: '¿Podrían bajar el volumen? Estoy tomando mi matcha latte.'")
 
 # --------------------------------------------------------------------
-# 3. CLASE ABSTRACTA: METRO
-#    Sin atributos, solo métodos abstractos.
+# CLASE ABSTRACTA: METRO
 # --------------------------------------------------------------------
 class Metro(ABC):
     @abstractmethod
@@ -140,9 +137,7 @@ class Metro(ABC):
         pass
 
 # --------------------------------------------------------------------
-# 4. CLASE CONCRETA: METRO DE CDMX
-#    Aquí sí agregamos un atributo para almacenar zombies,
-#    mostrando la "composición": si el Metro muere, sus zombies se van con él.
+# CLASE: METRO DE CDMX
 # --------------------------------------------------------------------
 class MetroDeCdmx(Metro):
     def __init__(self):
@@ -190,13 +185,10 @@ class MetroDeCdmx(Metro):
                 print(f" - {type(z).__name__} (Salud={z.salud}, Velocidad={z.velocidad})")
 
 # --------------------------------------------------------------------
-# 5. DEMO
+# MAIN
 # --------------------------------------------------------------------
 if __name__ == "__main__":
-    # Crear instancia del Metro
     metro = MetroDeCdmx()
-
-    # Crear algunos Zombies (atributos sólo en la subclase)
     z_perro = ZombiePerro(salud=50, velocidad=10)
     z_chilango = ZombieChilango(salud=60, velocidad=8)
     z_fit = ZombieFit(salud=80, velocidad=15)
@@ -219,7 +211,7 @@ if __name__ == "__main__":
     metro.agregar_zombie(z_gentri)
     print("-" * 40)
 
-    print("=== ZOMBIES A BORDO ===")
+    print("=== ZOMBIES ABORDO ===")
     metro.listar_zombies()
     print("-" * 40)
 
